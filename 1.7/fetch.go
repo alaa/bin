@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -23,8 +24,13 @@ func main() {
 }
 
 func fetch(url string) (io.Reader, error) {
+	if !strings.HasPrefix(url, "http://") {
+		url = "http://" + url
+	}
+
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	bodyReader := bytes.NewReader(body)
 
